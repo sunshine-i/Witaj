@@ -1,1 +1,51 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'sass:color';
+
+:root {
+  --bg: #faf6ef;
+  --bg-2: #f1ebde;
+  --paper: #fffcf6;
+  --ink: #1a2238;
+  --ink-soft: #5d6480;
+  --line: #e6dfcf;
+  --accent: #d96846;
+  --accent-deep: #b04e2f;
+
+  --font-display: 'Instrument Serif', serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+
+  --radius: 20px;
+  --shadow: 0 1px 2px rgba(26, 34, 56, 0.06), 0 12px 32px rgba(26, 34, 56, 0.08);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.display {
+  font-family: var(--font-display);
+}
+
+// Section colour tokens — consumed as var(--sec) / var(--sec-soft)
+[data-section='emergencies']   { --sec: #c44536; --sec-soft: #f9dad4; }
+[data-section='healthcare']    { --sec: #5e8b6a; --sec-soft: #d9e9da; }
+[data-section='university']    { --sec: #4a6fa5; --sec-soft: #dbe4f1; }
+[data-section='everyday']      { --sec: #3a3f5c; --sec-soft: #dde0ea; }
+[data-section='banking']       { --sec: #3d7a82; --sec-soft: #d0e2e4; }
+[data-section='food']          { --sec: #b9852a; --sec-soft: #f0e2bd; }
+[data-section='accommodation'] { --sec: #875a82; --sec-soft: #e4d3e0; }
+[data-section='arrival']       { --sec: #cc6b34; --sec-soft: #f4dac4; }
+[data-section='transport']     { --sec: #4d4d8a; --sec-soft: #d9d9eb; }

@@ -1,0 +1,149 @@
+<main class="home">
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo-mark display" aria-hidden="true">W</div>
+      <div class="brand-text">
+        <span class="brand-name">Witaj</span>
+        <span class="brand-tagline">VIZJA student guide · Polska</span>
+      </div>
+    </div>
+    <button class="info-btn" aria-label="About this app" (click)="showAbout = true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ── Hero ───────────────────────────────────────────── -->
+  <section class="hero" aria-label="Welcome">
+    <h1 class="hero-heading display">Welcome to Poland, student.</h1>
+    <p class="hero-sub">Phrases, numbers, and tips for your first weeks.</p>
+  </section>
+
+  <!-- ── Search ─────────────────────────────────────────── -->
+  <div class="search-wrap" role="search">
+    <div class="search-bar">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input
+        type="search"
+        class="search-input"
+        placeholder="Search phrases…"
+        aria-label="Search phrases"
+        [value]="search.query()"
+        (input)="onSearchInput($event)"
+      />
+      @if (search.query()) {
+        <button class="search-clear" aria-label="Clear search" (click)="search.query.set('')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (!search.query()) {
+
+    <!-- ── Emergency banner ───────────────────────────────── -->
+    <section class="emergency-banner" aria-label="Emergency contacts">
+      <div class="emergency-text">
+        <p class="emergency-label">Emergencies · 24h</p>
+        <h2 class="emergency-heading">In trouble? Dial 112.</h2>
+        <p class="emergency-sub">One number. Operators speak English.</p>
+      </div>
+      <div class="emergency-numbers" role="list">
+        @for (num of content.emergencyNumbers().slice(0, 4); track num.id) {
+          <a
+            [href]="'tel:' + num.number.replace(' ', '')"
+            class="emergency-num"
+            role="listitem"
+            [attr.aria-label]="'Call ' + num.number + ' — ' + num.label"
+          >
+            <span class="num-digits">{{ num.number }}</span>
+            <span class="num-label">{{ num.label }}</span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- ── Section grid ───────────────────────────────────── -->
+    <section class="section-grid" aria-label="Topics">
+      @for (section of content.sections(); track section.id; let i = $index) {
+        <button
+          class="section-tile"
+          [attr.data-section]="section.slug"
+          [style.animation-delay]="i * 60 + 'ms'"
+          (click)="navigate(section.slug)"
+          [attr.aria-label]="section.name_en + ' — ' + (phraseCounts().get(section.id) ?? 0) + ' phrases'"
+        >
+          <div class="tile-icon">
+            <app-section-icon [slug]="section.slug" />
+          </div>
+          <p class="tile-name display">{{ section.name_pl }}</p>
+          <p class="tile-en">{{ section.name_en }}</p>
+          <p class="tile-count">{{ phraseCounts().get(section.id) ?? 0 }} phrases</p>
+        </button>
+      }
+    </section>
+
+  } @else {
+
+    <!-- ── Search results ─────────────────────────────────── -->
+    <section class="search-results" aria-label="Search results" aria-live="polite">
+      <p class="results-meta">
+        <strong>{{ search.results().length }}</strong>
+        result{{ search.results().length === 1 ? '' : 's' }} for
+        <em>'{{ search.query() }}'</em>
+      </p>
+
+      @if (search.results().length === 0) {
+        <p class="results-empty">No phrases found. Try a different word, or search in English.</p>
+      }
+
+      @for (result of search.results(); track result.id) {
+        <button
+          class="result-row"
+          (click)="navigate(result.section.slug)"
+          [attr.aria-label]="result.polish + ' — ' + result.english"
+        >
+          <span class="result-badge" [attr.data-section]="result.section.slug">
+            {{ result.section.name_en }}
+          </span>
+          <p class="result-polish display">{{ result.polish }}</p>
+          <p class="result-english">{{ result.english }}</p>
+        </button>
+      }
+    </section>
+
+  }
+
+</main>
+
+<!-- ── About modal ────────────────────────────────────────── -->
+@if (showAbout) {
+  <div
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-label="About Witaj"
+    (click)="showAbout = false"
+    (keydown.escape)="showAbout = false"
+  >
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="modal-close" aria-label="Close" (click)="showAbout = false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <h2 class="modal-title display">About Witaj</h2>
+      <p><strong>Witaj</strong> means "Welcome" in Polish.</p>
+      <p>This guide was made for international students arriving at VIZJA University in Warsaw. It covers essential phrases, emergency contacts, and practical tips for your first weeks in Poland.</p>
+      <p>The app works offline once loaded. Tap any phrase to copy it, and tap the speaker icon to hear it pronounced in Polish.</p>
+    </div>
+  </div>
+}

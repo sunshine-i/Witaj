@@ -1,0 +1,140 @@
+@if (section(); as sec) {
+
+  <article class="detail" [attr.data-section]="sec.slug">
+
+    <!-- ── Back button ──────────────────────────────────── -->
+    <div class="back-row">
+      <button class="back-btn" aria-label="Back to home" (click)="goBack()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        Back
+      </button>
+    </div>
+
+    <!-- ── Section header ───────────────────────────────── -->
+    <header class="sec-header">
+      <p class="sec-label">{{ sec.name_en }}</p>
+      <h1 class="sec-title display">{{ sec.name_pl }}</h1>
+      @if (sec.intro) {
+        <p class="sec-intro">{{ sec.intro }}</p>
+      }
+    </header>
+
+    <!-- ── Emergency numbers (emergencies section only) ─── -->
+    @if (sec.slug === 'emergencies') {
+      <section class="emergency-grid" aria-label="Emergency phone numbers">
+        @for (num of content.emergencyNumbers(); track num.id) {
+          <a
+            [href]="'tel:' + num.number.replace(' ', '')"
+            class="emg-tile"
+            [attr.aria-label]="'Call ' + num.number + ' — ' + num.label"
+          >
+            <span class="emg-number">{{ num.number }}</span>
+            <span class="emg-label">{{ num.label }}</span>
+          </a>
+        }
+      </section>
+    }
+
+    <!-- ── Tips ─────────────────────────────────────────── -->
+    @if (sec.tips.length > 0) {
+      <section class="tips-block" aria-label="Tips">
+        @for (tip of sec.tips; track tip.id) {
+          <div class="tip-card" role="note">
+            <p class="tip-label">Good to know</p>
+            <p class="tip-content">{{ tip.content }}</p>
+          </div>
+        }
+      </section>
+    }
+
+    <!-- ── Phrases ──────────────────────────────────────── -->
+    <section class="phrases-block" aria-label="Phrases">
+      <!-- aria-live region for copy announcements -->
+      <span class="sr-only" aria-live="polite" aria-atomic="true">
+        {{ copiedIds().size > 0 ? 'Copied to clipboard.' : '' }}
+      </span>
+
+      @for (phrase of sec.phrases; track phrase.id) {
+        <div class="phrase-row">
+          <div class="phrase-text">
+            <p class="phrase-pl display">{{ phrase.polish }}</p>
+            <p class="phrase-en">{{ phrase.english }}</p>
+          </div>
+
+          <div class="phrase-actions">
+            @if (speech.supported()) {
+              <button
+                class="action-btn"
+                [attr.aria-label]="'Pronounce: ' + phrase.polish"
+                (click)="speak(phrase)"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                  <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+                </svg>
+              </button>
+            }
+
+            <button
+              class="copy-btn"
+              [class.copied]="copiedIds().has(phrase.id)"
+              [attr.aria-label]="copiedIds().has(phrase.id) ? 'Copied' : 'Copy ' + phrase.polish"
+              (click)="copyPhrase(phrase)"
+            >
+              @if (copiedIds().has(phrase.id)) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+                <span>Done</span>
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                </svg>
+                <span>Copy</span>
+              }
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- ── Links ─────────────────────────────────────────── -->
+    @if (sec.links.length > 0) {
+      <section class="links-block" aria-label="Useful links">
+        <h2 class="block-heading">Useful links</h2>
+        @for (link of sec.links; track link.id) {
+          <a
+            [href]="link.url"
+            class="link-card"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="link.title + ': ' + link.description"
+          >
+            <div class="link-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+              </svg>
+            </div>
+            <div class="link-body">
+              <p class="link-title">{{ link.title }}</p>
+              <p class="link-desc">{{ link.description }}</p>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        }
+      </section>
+    }
+
+  </article>
+
+} @else {
+  <!-- Loading / not found -->
+  <div class="detail-empty">
+    <p>Loading…</p>
+  </div>
+}
