@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist/witaj/browser",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
