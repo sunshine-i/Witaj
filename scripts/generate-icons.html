@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Witaj — Icon Generator</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; background: #faf6ef; color: #1a2238; }
+    h1 { margin-bottom: 8px; }
+    p  { color: #5d6480; margin-bottom: 24px; font-size: 14px; }
+    .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+    .tile { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    canvas { border-radius: 22%; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    a { font-size: 12px; color: #4a6fa5; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+    button {
+      margin-top: 24px; padding: 10px 24px; background: #1a2238; color: #faf6ef;
+      border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    button:hover { background: #2d3556; }
+  </style>
+</head>
+<body>
+  <h1>Witaj icon generator</h1>
+  <p>
+    Open this file in a browser, then click each "Download" link to save the icon.<br>
+    Copy the downloaded files into <code>public/icons/</code> in the project.
+  </p>
+  <div class="grid" id="grid"></div>
+  <button onclick="downloadAll()">Download all</button>
+
+  <script>
+    const SIZES = [72, 96, 128, 144, 152, 192, 384, 512];
+    const BG   = '#1a2238';
+    const FG   = '#fffcf6';
+
+    function drawIcon(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width  = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // Rounded rectangle background
+      const r = size * 0.22;
+      ctx.fillStyle = BG;
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, r);
+      ctx.fill();
+
+      // Italic "W"
+      const fontSize = size * 0.58;
+      ctx.fillStyle    = FG;
+      ctx.font         = `italic ${fontSize}px 'Georgia', 'Times New Roman', serif`;
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('W', size / 2 + size * 0.02, size / 2 + size * 0.04);
+
+      return canvas;
+    }
+
+    function buildTile(size) {
+      const canvas = drawIcon(size);
+      canvas.style.width  = Math.min(size, 96) + 'px';
+      canvas.style.height = Math.min(size, 96) + 'px';
+
+      const link = document.createElement('a');
+      link.textContent = `Download ${size}×${size}`;
+      link.download    = `icon-${size}x${size}.png`;
+      link.href        = canvas.toDataURL('image/png');
+
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.append(canvas, link);
+      return tile;
+    }
+
+    const grid = document.getElementById('grid');
+    SIZES.forEach(s => grid.appendChild(buildTile(s)));
+
+    function downloadAll() {
+      SIZES.forEach(size => {
+        const a      = document.createElement('a');
+        a.download   = `icon-${size}x${size}.png`;
+        a.href       = drawIcon(size).toDataURL('image/png');
+        a.click();
+      });
+    }
+  </script>
+</body>
+</html>

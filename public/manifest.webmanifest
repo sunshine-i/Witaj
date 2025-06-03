@@ -1,9 +1,12 @@
 {
-  "name": "witaj",
-  "short_name": "witaj",
+  "name": "Witaj — VIZJA Student Guide",
+  "short_name": "Witaj",
+  "description": "A bilingual Polish–English guide for international students at VIZJA University in Warsaw.",
+  "theme_color": "#1a2238",
+  "background_color": "#faf6ef",
   "display": "standalone",
-  "scope": "./",
-  "start_url": "./",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "icons/icon-72x72.png",

@@ -26,6 +26,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
   background: var(--bg);
@@ -49,3 +53,15 @@ body {
 [data-section='accommodation'] { --sec: #875a82; --sec-soft: #e4d3e0; }
 [data-section='arrival']       { --sec: #cc6b34; --sec-soft: #f4dac4; }
 [data-section='transport']     { --sec: #4d4d8a; --sec-soft: #d9d9eb; }
+
+// Respect reduced-motion preference — disable all transitions and animations
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

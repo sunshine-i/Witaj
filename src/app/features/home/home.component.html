@@ -9,7 +9,7 @@
         <span class="brand-tagline">VIZJA student guide · Polska</span>
       </div>
     </div>
-    <button class="info-btn" aria-label="About this app" (click)="showAbout = true">
+    <button type="button" class="info-btn" aria-label="About this app" (click)="showAbout = true">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10"/>
         <path d="M12 16v-4M12 8h.01"/>
@@ -38,7 +38,7 @@
         (input)="onSearchInput($event)"
       />
       @if (search.query()) {
-        <button class="search-clear" aria-label="Clear search" (click)="search.query.set('')">
+        <button type="button" class="search-clear" aria-label="Clear search" (click)="search.query.set('')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <path d="M18 6 6 18M6 6l12 12"/>
           </svg>
@@ -75,6 +75,7 @@
     <section class="section-grid" aria-label="Topics">
       @for (section of content.sections(); track section.id; let i = $index) {
         <button
+          type="button"
           class="section-tile"
           [attr.data-section]="section.slug"
           [style.animation-delay]="i * 60 + 'ms'"
@@ -84,7 +85,7 @@
           <div class="tile-icon">
             <app-section-icon [slug]="section.slug" />
           </div>
-          <p class="tile-name display">{{ section.name_pl }}</p>
+          <p class="tile-name display" lang="pl">{{ section.name_pl }}</p>
           <p class="tile-en">{{ section.name_en }}</p>
           <p class="tile-count">{{ phraseCounts().get(section.id) ?? 0 }} phrases</p>
         </button>
@@ -107,6 +108,7 @@
 
       @for (result of search.results(); track result.id) {
         <button
+          type="button"
           class="result-row"
           (click)="navigate(result.section.slug)"
           [attr.aria-label]="result.polish + ' — ' + result.english"
@@ -114,7 +116,7 @@
           <span class="result-badge" [attr.data-section]="result.section.slug">
             {{ result.section.name_en }}
           </span>
-          <p class="result-polish display">{{ result.polish }}</p>
+          <p class="result-polish display" lang="pl">{{ result.polish }}</p>
           <p class="result-english">{{ result.english }}</p>
         </button>
       }
@@ -135,7 +137,7 @@
     (keydown.escape)="showAbout = false"
   >
     <div class="modal" (click)="$event.stopPropagation()">
-      <button class="modal-close" aria-label="Close" (click)="showAbout = false">
+      <button type="button" class="modal-close" aria-label="Close" autofocus (click)="showAbout = false">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
           <path d="M18 6 6 18M6 6l12 12"/>
         </svg>

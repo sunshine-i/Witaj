@@ -4,7 +4,7 @@
 
     <!-- ── Back button ──────────────────────────────────── -->
     <div class="back-row">
-      <button class="back-btn" aria-label="Back to home" (click)="goBack()">
+      <button type="button" class="back-btn" aria-label="Back to home" (click)="goBack()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="m15 18-6-6 6-6"/>
         </svg>
@@ -15,7 +15,7 @@
     <!-- ── Section header ───────────────────────────────── -->
     <header class="sec-header">
       <p class="sec-label">{{ sec.name_en }}</p>
-      <h1 class="sec-title display">{{ sec.name_pl }}</h1>
+      <h1 class="sec-title display" lang="pl">{{ sec.name_pl }}</h1>
       @if (sec.intro) {
         <p class="sec-intro">{{ sec.intro }}</p>
       }
@@ -59,13 +59,14 @@
       @for (phrase of sec.phrases; track phrase.id) {
         <div class="phrase-row">
           <div class="phrase-text">
-            <p class="phrase-pl display">{{ phrase.polish }}</p>
+            <p class="phrase-pl display" lang="pl">{{ phrase.polish }}</p>
             <p class="phrase-en">{{ phrase.english }}</p>
           </div>
 
           <div class="phrase-actions">
             @if (speech.supported()) {
               <button
+                type="button"
                 class="action-btn"
                 [attr.aria-label]="'Pronounce: ' + phrase.polish"
                 (click)="speak(phrase)"
@@ -78,6 +79,7 @@
             }
 
             <button
+              type="button"
               class="copy-btn"
               [class.copied]="copiedIds().has(phrase.id)"
               [attr.aria-label]="copiedIds().has(phrase.id) ? 'Copied' : 'Copy ' + phrase.polish"
