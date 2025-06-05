@@ -6,6 +6,7 @@ import { map } from 'rxjs';
 import { ContentService } from '../../core/services/content.service';
 import { SpeechService } from '../../core/services/speech.service';
 import { Phrase } from '../../core/models/content.models';
+import { SectionIconComponent } from '../../shared/section-icon/section-icon.component';
 
 function copyText(text: string): Promise<void> {
   if (navigator.clipboard) {
@@ -27,7 +28,7 @@ function copyText(text: string): Promise<void> {
   selector: 'app-section-detail',
   templateUrl: './section-detail.component.html',
   styleUrl: './section-detail.component.scss',
-  imports: [],
+  imports: [SectionIconComponent],
 })
 export class SectionDetailComponent {
   protected readonly content = inject(ContentService);
@@ -44,7 +45,14 @@ export class SectionDetailComponent {
     this.content.sectionBySlug(this.slug())
   );
 
+  protected readonly activeTab = signal<'phrases' | 'tips' | 'links'>('phrases');
   protected readonly copiedIds = signal(new Set<string>());
+  protected readonly saved = signal(false);
+  protected readonly speakingId = signal<string | null>(null);
+
+  protected toggleSaved(): void {
+    this.saved.update(v => !v);
+  }
 
   protected goBack(): void {
     this.location.back();
@@ -67,6 +75,22 @@ export class SectionDetailComponent {
   }
 
   protected speak(phrase: Phrase): void {
-    this.speech.speak(phrase.polish);
+    if (this.speakingId() === phrase.id) {
+      this.speech.stop();
+      this.speakingId.set(null);
+      return;
+    }
+    this.speakingId.set(phrase.id);
+    this.speech.speak(phrase.polish, () => {
+      this.speakingId.set(null);
+    });
+  }
+
+  protected linkDomain(url: string): string {
+    try {
+      return new URL(url).hostname.replace(/^www\./, '');
+    } catch {
+      return url;
+    }
   }
 }
